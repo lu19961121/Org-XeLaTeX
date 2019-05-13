@@ -1,0 +1,104 @@
+\ProvidesPackage{ecnu}
+%	www.law.ecnu.edu.cn/uploads/soft/161210/本科毕业论文格式.doc
+%------------- CTEX 文档 -- http://ctan.math.illinois.edu/language/chinese/ctex/ctex.pdf
+
+%% 测试 排版方案
+%%\ctexset {
+%%	chapter/number = \arabic{chapter},
+%%	chapter/numberformat = \color{blue}\zihao{0}\itshape,
+%%	}
+%% 排版方案选项 默认 scheme=<chinese>
+
+\ctexset {
+%	autoindent = true,    % 首行缩进
+	today = small, 	% 日期汉化
+	section = {
+		format   = \Large\bfseries\raggedright,
+		number = \chinese{section},
+		name     = {, 、},
+		},
+	subsection = {
+		number = \chinese{subsection},
+		name     = {(,)},
+%		hang	    = false,
+		},
+	% appendix/numbering = false,
+	}
+%------------------------------------旧版本 兼容-----------------------------------------------%
+%\CTEXsetup[name={,、},number={\chinese{section}}]{section}
+%% http://www.voidcn.com/article/p-tnemiult-td.html
+%\CTEXsetup[name={（,）},number={\chinese{subsection}}]{subsection}
+%----------------------------------------------------------------------------------------------------%
+\setcounter{secnumdepth}{3}
+% 字号 小四
+\zihao {-4}
+% 行距 1.5倍
+\linespread {1.5}
+% 摘要
+%\linespread{1.25}
+\newenvironment{poliabstract}[1]
+   {\renewcommand{\abstractname}{#1}%
+   		\begin{abstract}}{\end{abstract}} % 英文摘要 
+%    https://latex.org/forum/viewtopic.php?t=12156
+\songti
+\setmainfont{Times New Roman} 
+% % 关键词
+% \newenvironment{polikeywords}[1]
+%    {\renewcommand{\keywordsname}{#1}%
+%    		\begin{keywords}}{\end{keywords}}
+% 页边距设置
+\usepackage[top=2.5cm, bottom=2.0cm, left=3.0cm, right=2.5cm]{geometry}
+%脚注问题，如[1]显示
+\renewcommand{\thefootnote}{[\arabic{footnote}]} 
+% 页码
+% \pagestyle{plain}
+\usepackage{fancyhdr}
+\renewcommand{\headrule}{} %去掉页眉横线
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\fancyfoot[R]{\thepage}
+% 参考文献
+%\usepackage{gbt7714}
+\bibliographystyle{plain}
+\usepackage[colorlinks=true,pdfstartview=FitH,linkcolor=blue,anchorcolor=violet,citecolor=magenta]{hyperref}
+\usepackage[backend=biber,style=gb7714-2015,gbpunctin=false]{biblatex}%sorting=nyt
+\DefineBibliographyStrings{english}{in={}}
+\DefineBibliographyStrings{english}{incn={}}
+\addbibresource[location=local]{refs.bib}
+% \usepackage[nottoc]{tocbibind} % 参考文献加入目录
+% 附录
+\usepackage{appendix}
+%\usepackage{graphicx}
+%\usepackage{pgffor}
+\usepackage{pdfpages} % 问卷 pdf 插入
+
+% 图片
+\usepackage{graphicx}
+\usepackage{pgffor}
+\graphicspath{{img/}} 
+\usepackage{float} 
+
+%% https://www.overleaf.com/learn/latex/Page_numbering
+%% 两种页码
+% \usepackage[english]{babel} 
+% \usepackage{inputenc} % 外语支持
+% \usepackage{csquotes} %https://tex.stackexchange.com/questions/229638/package-biblatex-warning-babel-polyglossia-detected-but-csquotes-missing
+
+%\usepackage{indentfirst}
+% 列表
+% \usepackage{enumerate}
+\usepackage[shortlabels]{enumitem}
+\setlist[enumerate]{wide=\parindent} % 列表首行缩进
+\setlist[itemize]{wide=\parindent}  
+\setlist{nosep}
+% 三线表
+\usepackage{booktabs}
+\usepackage{makecell} % 多行合并
+\usepackage{xcolor} 
+\newcommand\myworries[1]{\textcolor{red}{#1}} %% TODO
+% 超链接
+\usepackage{hyperref}
+\usepackage{mathtools}
+%\usepackage{tikz}
+%
