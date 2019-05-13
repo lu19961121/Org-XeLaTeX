@@ -1,0 +1,129 @@
+# -*- coding: utf-8 -*-
+
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
+#+options: html-link-use-abs-url:nil html-postamble:auto
+#+options: html-preamble:t html-scripts:t html-style:t
+#+options: html5-fancy:nil tex:t
+#+html_doctype: xhtml-strict
+#+html_container: div
+#+description:
+#+keywords:
+#+html_link_home:
+#+html_link_up:
+#+html_mathjax:<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+#+html_head:
+#+html_head_extra:
+#+subtitle:
+#+infojs_opt:
+#+creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 26.2 (<a href="https://orgmode.org">Org</a> mode 9.2.3)
+#+latex_header:
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:nil e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:nil todo:t |:t
+#+title: 人文社科类学位论文写作—— $\LaTeX$ 轻量级应用 
+#+date: <2019-05-13 周一>
+#+author:
+#+email: Mr.NLP@BOJACK
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 26.2 (Org mode 9.2.3)
+
+
+* 写作缘由
+LaTeX的论文排版无可替代，而学校不会专门教排版设计。
+针对人文社科类学位论文写作，从基本的文字编辑，数据分析，进度管理，版本控制到最后的排版设计，笔者写下这篇文章，
+希望能够帮助大家完成自己的
+毕业论文。
+笔者默认你使用Windows10操作系统，Mac 原理一样，Linux...嗯，你应该比我知道的多。[[file:Org-XeLaTeX.pdf][PDF version]]
+* 文字编辑
+** Org-mode 安装
+注：下列键盘符号 C 代表 Ctrl 键， M 代表 Alt 键，RET 代表回车，小写字母就是实际字母。
+
+ - 下载[[https://www.gnu.org/software/emacs/download.html][Emacs]] 26.2，安装最新版 [[https://orgmode.org/elpa.html][Org-mode]] 9.2.3，官网说的配置文件 *init file* 需要新建：
+ - 打开 *runemaca.exe* ，C-x C-f 输入 *.emacs* ，新建完成
+ - 按照官网介绍操作，安装完成后，M-x org-version，应该就是与官网一致的版本。
+** 基本操作
+参照国外大佬的[[https://pan.baidu.com/s/1p6CRrnt6c0WrROvLW0BjRA%20][视频（提取码：26qz ）]]，主要记 *快捷键* （输入字母可以识别，但不是最新的，比如大写字母都改小写了），介绍顺序在[[https://orgmode.org/worg/org-tutorials/org-screencasts/org-mode-google-tech-talk.html][这儿]]。
+** 特殊写作环境
+写作前，开头加入这段文本:
+#+BEGIN_SRC emacs-lisp
+# -*- coding: utf-8 -*-
+#+END_SRC
+
+保证你的文字导出时不会乱码。
+
+1.摘要
+
+#+BEGIN_SRC emacs-lisp
+#+begin_abstract
+摘要测试
+#+end_abstract
+#+END_SRC
+
+2.代码
+
+C-c C-,
+
+默认为verbatim环境，
+如果要用 minted 宏包，确认你有安装了Python包pygments，建议安装 *Anaconda* ，然后在 #+begin
+前一行加上
+
+#+BEGIN_SRC emacs-lisp
+#+ATTR_LATEX: :options org-latex-minted-options
+#+END_SRC
+
+* 数据分析
+SPSS良心14天试用期够用了，如果你经常要写论文，推荐学习一下 R 语言。
+* TODO 使用 Org-mode 的GTD工作流程
+* 版本控制（可选）
+** 安装 [[https://git-scm.com/downloads][Git]] 2.21
+** [[https://www.liaoxuefeng.com/wiki/896043488029600][廖雪峰的Git教程]]
+* 协同写作
+C-c C-e 导出utf-8文本，供导师修改（反正排版是最后做的）。
+* 排版设计
+笔者在设计过程中发现Org-mode中用 $\XeLaTeX$ 写中文文档很早就有人写配置（添加在 *.emacs* 文件的）了，
+现状笔者添加到 ox-latex.el里，然后编译：M-x byte-compile-file，重新打开 runemacs.exe （推荐
+添加到桌面快捷方式）就可以使用了。
+所有文本写完之后，跳到开头，C-c C-e #，输入latex，应该可以看到一下信息：
+
+#+BEGIN_SRC emacs-lisp
+#+latex_class: ctexrep
+#+latex_class_options:<默认为[12pt, a4paper],可以自己设置>
+#+latex_header:{\usepackage{学校 \LaTeX 模板样式（.sty结尾），我用的 ecnu}
+#+latex_header_extra:
+#+description:
+#+keywords:
+#+subtitle:
+#+author: 
+#+title: <默认显示你的文件名>
+#+latex_compiler: xelatex
+#+date: \today 
+#+END_SRC
+
+author，title，date可以删掉，如果有学校封面。
+
+表格，图片一律使用图片导入：C-c C-l file，选择你的图片路径即可。
+示例：
+[[file:org-mode-unicorn-logo.png]]
+** 安装 [[https://zhuanlan.zhihu.com/p/64555335][$\TeX$ Live]]（强烈推荐）2019
+安装完成后，打开你的 *.org* 文件，C-c C-e l o，即可打开编译好的 *pdf* 文件，当然可以自己改一下
+*.tex* 文件，这样排版工作量就会少很多。
+* 参考链接
+** TODO 基于 gbt-7714-2015 格式参考文献编译
+
+[1] [[https://www.reddit.com/r/emacs/comments/4k1lp2/noob_question_how_to_set_locales_and_encoding_for/]]
+
+[2] [[https://www.cnblogs.com/wangkangluo1/archive/2012/02/04/2337705.html]]
+
+[3] [[http://www.cnblogs.com/visayafan/archive/2012/06/16/2552023.html]]
+
+[4] [[https://xiaoguo.net/wiki/org-mode-book.html]]
+
+[5] [[https://orgmode.org/manual/index.html#SEC_Contents]]
+
+[6] [[https://orgmode.org/worg/org-tutorials/org-screencasts/org-mode-google-tech-talk.html#sec-2]]
+
+[7] [[https://zhuanlan.zhihu.com/p/64555335]]
