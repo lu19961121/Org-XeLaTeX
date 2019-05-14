@@ -11,9 +11,9 @@
 #+html_link_home:
 #+html_link_up:
 #+html_mathjax:<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
-#+html_head:
+#+html_head:<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 #+html_head_extra:
-#+subtitle:
+#+subtitle: [[file:Org-XeLaTeX.pdf][PDF版本下载]]
 #+infojs_opt:
 #+creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 26.2 (<a href="https://orgmode.org">Org</a> mode 9.2.3)
 #+latex_header:
@@ -37,7 +37,8 @@ LaTeX的论文排版无可替代，而学校不会专门教排版设计。
 针对人文社科类学位论文写作，从基本的文字编辑，数据分析，进度管理，版本控制到最后的排版设计，笔者写下这篇文章，
 希望能够帮助大家完成自己的
 毕业论文。
-笔者默认你使用Windows10操作系统，Mac 原理一样，Linux...嗯，你应该比我知道的多。[[file:Org-XeLaTeX.pdf][PDF version]]
+笔者默认你使用 @@html:<i class="fab fa-windows"></i>@@  Windows10操作系统，
+@@html:<i class="fab fa-apple"></i>@@  Mac 原理一样，Linux...@@html:<i class="fab fa-linux"></i>@@ 嗯，你应该比我知道的多。
 * 文字编辑
 ** Org-mode 安装
 注：下列键盘符号 C 代表 Ctrl 键， M 代表 Alt 键，RET 代表回车，小写字母就是实际字母。
@@ -84,7 +85,7 @@ SPSS良心14天试用期够用了，如果你经常要写论文，推荐学习�
 * 协同写作
 C-c C-e 导出utf-8文本，供导师修改（反正排版是最后做的）。
 * 排版设计
-笔者在设计过程中发现Org-mode中用 $\XeLaTeX$ 写中文文档很早就有人写配置（添加在 *.emacs* 文件的）了，
+笔者在设计过程中发现Org-mode中用 XeLaTeX 写中文文档很早就有人写配置（添加在 *.emacs* 文件的）了，
 现状笔者添加到 ox-latex.el里，然后编译：M-x byte-compile-file，重新打开 runemacs.exe （推荐
 添加到桌面快捷方式）就可以使用了。
 所有文本写完之后，跳到开头，C-c C-e #，输入latex，应该可以看到一下信息：

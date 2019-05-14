@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-05-13 周一 21:50 -->
+<!-- 2019-05-14 周二 14:49 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>人文社科类学位论文写作—— \(\LaTeX\) 轻量级应用</title>
@@ -198,6 +198,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js"></script>
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/readtheorg/js/readtheorg.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -269,27 +270,31 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
-<h1 class="title">人文社科类学位论文写作—— \(\LaTeX\) 轻量级应用</h1>
+<h1 class="title">人文社科类学位论文写作—— \(\LaTeX\) 轻量级应用
+<br />
+<span class="subtitle"><a href="Org-XeLaTeX.pdf">PDF版本下载</a></span>
+</h1>
 
 
-<div id="outline-container-org07755d8" class="outline-2">
-<h2 id="org07755d8"><span class="section-number-2">1</span> 写作缘由</h2>
+<div id="outline-container-org6e6dea7" class="outline-2">
+<h2 id="org6e6dea7"><span class="section-number-2">1</span> 写作缘由</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 LaTeX的论文排版无可替代，而学校不会专门教排版设计。
 针对人文社科类学位论文写作，从基本的文字编辑，数据分析，进度管理，版本控制到最后的排版设计，笔者写下这篇文章，
 希望能够帮助大家完成自己的
 毕业论文。
-笔者默认你使用Windows10操作系统，Mac 原理一样，Linux&#x2026;嗯，你应该比我知道的多。<a href="Org-XeLaTeX.pdf">PDF version</a>
+笔者默认你使用 <i class="fab fa-windows"></i>  Windows10操作系统，
+<i class="fab fa-apple"></i>  Mac 原理一样，Linux&#x2026;<i class="fab fa-linux"></i> 嗯，你应该比我知道的多。
 </p>
 </div>
 </div>
-<div id="outline-container-org26e6980" class="outline-2">
-<h2 id="org26e6980"><span class="section-number-2">2</span> 文字编辑</h2>
+<div id="outline-container-orgf1b3338" class="outline-2">
+<h2 id="orgf1b3338"><span class="section-number-2">2</span> 文字编辑</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org160027e" class="outline-3">
-<h3 id="org160027e"><span class="section-number-3">2.1</span> Org-mode 安装</h3>
+<div id="outline-container-org65311f2" class="outline-3">
+<h3 id="org65311f2"><span class="section-number-3">2.1</span> Org-mode 安装</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 注：下列键盘符号 C 代表 Ctrl 键， M 代表 Alt 键，RET 代表回车，小写字母就是实际字母。
@@ -302,16 +307,16 @@ LaTeX的论文排版无可替代，而学校不会专门教排版设计。
 </ul>
 </div>
 </div>
-<div id="outline-container-org74fbe5e" class="outline-3">
-<h3 id="org74fbe5e"><span class="section-number-3">2.2</span> 基本操作</h3>
+<div id="outline-container-orge12ae03" class="outline-3">
+<h3 id="orge12ae03"><span class="section-number-3">2.2</span> 基本操作</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 参照国外大佬的<a href="https://pan.baidu.com/s/1p6CRrnt6c0WrROvLW0BjRA%20">视频（提取码：26qz ）</a>，主要记 <b>快捷键</b> （输入字母可以识别，但不是最新的，比如大写字母都改小写了），介绍顺序在<a href="https://orgmode.org/worg/org-tutorials/org-screencasts/org-mode-google-tech-talk.html">这儿</a>。
 </p>
 </div>
 </div>
-<div id="outline-container-orgc45d1ff" class="outline-3">
-<h3 id="orgc45d1ff"><span class="section-number-3">2.3</span> 特殊写作环境</h3>
+<div id="outline-container-orgc7823b5" class="outline-3">
+<h3 id="orgc7823b5"><span class="section-number-3">2.3</span> 特殊写作环境</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 写作前，开头加入这段文本:
@@ -358,41 +363,41 @@ C-c C-,
 </div>
 </div>
 
-<div id="outline-container-org4eb441a" class="outline-2">
-<h2 id="org4eb441a"><span class="section-number-2">3</span> 数据分析</h2>
+<div id="outline-container-orga01b121" class="outline-2">
+<h2 id="orga01b121"><span class="section-number-2">3</span> 数据分析</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 SPSS良心14天试用期够用了，如果你经常要写论文，推荐学习一下 R 语言。
 </p>
 </div>
 </div>
-<div id="outline-container-org5f283af" class="outline-2">
-<h2 id="org5f283af"><span class="section-number-2">4</span> <span class="todo TODO">TODO</span> 使用 Org-mode 的GTD工作流程</h2>
+<div id="outline-container-org3a11fbd" class="outline-2">
+<h2 id="org3a11fbd"><span class="section-number-2">4</span> <span class="todo TODO">TODO</span> 使用 Org-mode 的GTD工作流程</h2>
 </div>
-<div id="outline-container-orgee655fd" class="outline-2">
-<h2 id="orgee655fd"><span class="section-number-2">5</span> 版本控制（可选）</h2>
+<div id="outline-container-org18fc352" class="outline-2">
+<h2 id="org18fc352"><span class="section-number-2">5</span> 版本控制（可选）</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org90a59ee" class="outline-3">
-<h3 id="org90a59ee"><span class="section-number-3">5.1</span> 安装 <a href="https://git-scm.com/downloads">Git</a> 2.21</h3>
+<div id="outline-container-org8c59ba6" class="outline-3">
+<h3 id="org8c59ba6"><span class="section-number-3">5.1</span> 安装 <a href="https://git-scm.com/downloads">Git</a> 2.21</h3>
 </div>
-<div id="outline-container-orgd51d2fa" class="outline-3">
-<h3 id="orgd51d2fa"><span class="section-number-3">5.2</span> <a href="https://www.liaoxuefeng.com/wiki/896043488029600">廖雪峰的Git教程</a></h3>
+<div id="outline-container-org610ccfb" class="outline-3">
+<h3 id="org610ccfb"><span class="section-number-3">5.2</span> <a href="https://www.liaoxuefeng.com/wiki/896043488029600">廖雪峰的Git教程</a></h3>
 </div>
 </div>
-<div id="outline-container-org77a3ec5" class="outline-2">
-<h2 id="org77a3ec5"><span class="section-number-2">6</span> 协同写作</h2>
+<div id="outline-container-org04edc39" class="outline-2">
+<h2 id="org04edc39"><span class="section-number-2">6</span> 协同写作</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 C-c C-e 导出utf-8文本，供导师修改（反正排版是最后做的）。
 </p>
 </div>
 </div>
-<div id="outline-container-org9ff1e33" class="outline-2">
-<h2 id="org9ff1e33"><span class="section-number-2">7</span> 排版设计</h2>
+<div id="outline-container-org8c75350" class="outline-2">
+<h2 id="org8c75350"><span class="section-number-2">7</span> 排版设计</h2>
 <div class="outline-text-2" id="text-7">
 <p>
-笔者在设计过程中发现Org-mode中用 \(\XeLaTeX\) 写中文文档很早就有人写配置（添加在 <b>.emacs</b> 文件的）了，
+笔者在设计过程中发现Org-mode中用 XeLaTeX 写中文文档很早就有人写配置（添加在 <b>.emacs</b> 文件的）了，
 现状笔者添加到 ox-latex.el里，然后编译：M-x byte-compile-file，重新打开 runemacs.exe （推荐
 添加到桌面快捷方式）就可以使用了。
 所有文本写完之后，跳到开头，C-c C-e #，输入latex，应该可以看到一下信息：
@@ -423,8 +428,8 @@ author，title，date可以删掉，如果有学校封面。
 <img src="org-mode-unicorn-logo.png" alt="org-mode-unicorn-logo.png" />
 </p>
 </div>
-<div id="outline-container-orgea63192" class="outline-3">
-<h3 id="orgea63192"><span class="section-number-3">7.1</span> 安装 <a href="https://zhuanlan.zhihu.com/p/64555335">\(\TeX\) Live</a>（强烈推荐）2019</h3>
+<div id="outline-container-org9022cb9" class="outline-3">
+<h3 id="org9022cb9"><span class="section-number-3">7.1</span> 安装 <a href="https://zhuanlan.zhihu.com/p/64555335">\(\TeX\) Live</a>（强烈推荐）2019</h3>
 <div class="outline-text-3" id="text-7-1">
 <p>
 安装完成后，打开你的 <b>.org</b> 文件，C-c C-e l o，即可打开编译好的 <b>pdf</b> 文件，当然可以自己改一下
@@ -433,12 +438,12 @@ author，title，date可以删掉，如果有学校封面。
 </div>
 </div>
 </div>
-<div id="outline-container-orgdc524f8" class="outline-2">
-<h2 id="orgdc524f8"><span class="section-number-2">8</span> 参考链接</h2>
+<div id="outline-container-orge9aa3b7" class="outline-2">
+<h2 id="orge9aa3b7"><span class="section-number-2">8</span> 参考链接</h2>
 <div class="outline-text-2" id="text-8">
 </div>
-<div id="outline-container-org8c0c4d6" class="outline-3">
-<h3 id="org8c0c4d6"><span class="section-number-3">8.1</span> <span class="todo TODO">TODO</span> 基于 gbt-7714-2015 格式参考文献编译</h3>
+<div id="outline-container-orgb24326c" class="outline-3">
+<h3 id="orgb24326c"><span class="section-number-3">8.1</span> <span class="todo TODO">TODO</span> 基于 gbt-7714-2015 格式参考文献编译</h3>
 <div class="outline-text-3" id="text-8-1">
 <p>
 [1] <a href="https://www.reddit.com/r/emacs/comments/4k1lp2/noob_question_how_to_set_locales_and_encoding_for/">https://www.reddit.com/r/emacs/comments/4k1lp2/noob_question_how_to_set_locales_and_encoding_for/</a>
@@ -472,7 +477,7 @@ author，title，date可以删掉，如果有学校封面。
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="date">Created: 2019-05-13 周一 21:50</p>
+<p class="date">Created: 2019-05-14 周二 14:49</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
