@@ -180,7 +180,7 @@
     ("et" . "estonian")
     ("eu" . "basque")
     ("fi" . "finnish")
-    ("fr" . "frenchb")
+    ("fr" . "french")
     ("fr-ca" . "canadien")
     ("gl" . "galician")
     ("hr" . "croatian")
@@ -558,10 +558,6 @@ are written as utf8 files."
 	   (string :tag "Derived from buffer")
 	   (string :tag "Use this instead"))))
 
-;; (defcustom org-latex-author-command "\\author{%a}"
-;;   :group 'org-export-latex
-;;   :type '(string :tag "Format string"))
-
 (defcustom org-latex-title-command "\\maketitle"
   "The command used to insert the title just after \\begin{document}.
 
@@ -823,8 +819,9 @@ attributes."
   :type 'boolean
   :safe #'booleanp)
 
-(defcustom org-latex-table-scientific-notation "%s\\,(%s)"
+(defcustom org-latex-table-scientific-notation nil
   "Format string to display numbers in scientific notation.
+
 The format should have \"%s\" twice, for mantissa and exponent
 \(i.e., \"%s\\\\times10^{%s}\").
 
@@ -1039,7 +1036,7 @@ value.  For example,
   (setq org-latex-minted-options
     \\='((\"bgcolor\" \"bg\") (\"frame\" \"lines\")))
 
-will result in src blocks being exported with
+will result in source blocks being exported with
 
 \\begin{minted}[bgcolor=bg,frame=lines]{<LANG>}
 
@@ -1060,12 +1057,13 @@ block-specific options, you may use the following syntax:
 (defcustom org-latex-custom-lang-environments nil
   "Alist mapping languages to language-specific LaTeX environments.
 
-It is used during export of src blocks by the listings and minted
-latex packages.  The environment may be a simple string, composed of
-only letters and numbers.  In this case, the string is directly the
-name of the latex environment to use.  The environment may also be
-a format string.  In this case the format string will be directly
-exported.  This format string may contain these elements:
+It is used during export of source blocks by the listings and
+minted LaTeX packages.  The environment may be a simple string,
+composed of only letters and numbers.  In this case, the string
+is directly the name of the LaTeX environment to use.  The
+environment may also be a format string.  In this case the format
+string will be directly exported.  This format string may contain
+these elements:
 
   %s for the formatted source
   %c for the caption
@@ -1087,7 +1085,7 @@ would have the effect that if Org encounters a Python source block
 during LaTeX export it will produce
 
   \\begin{pythoncode}
-  <src block body>
+  <source block body>
   \\end{pythoncode}
 
 and if Org encounters an Ocaml source block during LaTeX export it
@@ -1095,7 +1093,7 @@ will produce
 
   \\begin{listing}
   \\begin{minted}[<attr_latex options>]{ocaml}
-  <src block body>
+  <source block body>
   \\end{minted}
   \\caption{<caption>}
   \\label{<label>}
@@ -1234,7 +1232,7 @@ logfiles to remove, set `org-latex-logfiles-extensions'."
     ("Undefined control sequence" . "[undefined control sequence]"))
   "Alist of regular expressions and associated messages for the user.
 The regular expressions are used to find possible warnings in the
-log of a latex-run.  These warnings will be reported after
+log of a LaTeX-run.  These warnings will be reported after
 calling `org-latex-compile'."
   :group 'org-export-latex
   :version "26.1"
@@ -1451,26 +1449,21 @@ Return the new header."
 (defun org-latex--remove-packages (pkg-alist info)
   "Remove packages based on the current LaTeX compiler.
 
-If the fourth argument of an element is set in pkg-alist, and it
-is not a member of the LaTeX compiler of the document, the packages
-is removed.  See also `org-latex-compiler'.
+PKG-ALIST is a list of packages, as in `org-latex-packages-alist'
+and `org-latex-default-packages-alist'.  If the fourth argument
+of a package is neither nil nor a member of the LaTeX compiler
+associated to the document, the package is removed.
 
-Return modified pkg-alist."
+Return new list of packages."
   (let ((compiler (or (plist-get info :latex-compiler) "")))
-    (if (member-ignore-case compiler org-latex-compilers)
-	(delq nil
-	      (mapcar
-	       (lambda (pkg)
-		 (unless (and
-			  (listp pkg)
-			  (let ((third (nth 3 pkg)))
-			    (and third
-				 (not (member-ignore-case
-				       compiler
-				       (if (listp third) third (list third)))))))
-		   pkg))
-	       pkg-alist))
-      pkg-alist)))
+    (if (not (member-ignore-case compiler org-latex-compilers)) pkg-alist
+      (cl-remove-if-not
+       (lambda (package)
+	 (pcase package
+	   (`(,_ ,_ ,_ nil) t)
+	   (`(,_ ,_ ,_ ,compilers) (member-ignore-case compiler compilers))
+	   (_ t)))
+       pkg-alist))))
 
 (defun org-latex--find-verb-separator (s)
   "Return a character not used in string S.
@@ -1626,7 +1619,7 @@ INFO is a plist used as a communication channel."
 
 (defun org-latex-clean-invalid-line-breaks (data _backend _info)
   (replace-regexp-in-string
-   "\\(\\end{[A-Za-z0-9*]+}\\|^\\)[ \t]*\\\\\\\\[ \t]*$" "\\1"
+   "\\(\\\\end{[A-Za-z0-9*]+}\\|^\\)[ \t]*\\\\\\\\[ \t]*$" "\\1"
    data))
 
 
@@ -1676,9 +1669,9 @@ holding export options."
   (let ((title (org-export-data (plist-get info :title) info))
 	(spec (org-latex--format-spec info)))
     (concat
-     ;; ;; Time-stamp.
-     ;; (and (plist-get info :time-stamp-file)
-     ;; 	  (format-time-string "%% Created %Y-%m-%d %a %H:%M\n"))
+     ;; Time-stamp.
+     (and (plist-get info :time-stamp-file)
+	  (format-time-string "%% Created %Y-%m-%d %a %H:%M\n"))
      ;; LaTeX compiler.
      (org-latex--insert-compiler info)
      ;; Document class and packages.
@@ -1717,21 +1710,17 @@ holding export options."
             (format-spec template spec)))
      ;; Document start.
      "\\begin{document}\n\n"
-     ;; Author command.
-     ;;(let* ((author-command (plist-get info :latex-author-command))
-     ;;	    (command (and (stringp author-command)
-     ;; 			  (format-spec author-command spec))))
      ;; Title command.
-      (let* ((title-command (plist-get info :latex-title-command))
-             (command (and (stringp title-command)
-                           (format-spec title-command spec))))
-	(org-element-normalize-string
-	 (cond ((not (plist-get info :with-title)) nil)
-	       ((string= "" title) nil)
-	       ((not (stringp command)) nil)
-	       ((string-match "\\(?:[^%]\\|^\\)%s" command)
-		(format command title))
-	       (t command))))
+     (let* ((title-command (plist-get info :latex-title-command))
+            (command (and (stringp title-command)
+                          (format-spec title-command spec))))
+       (org-element-normalize-string
+	(cond ((not (plist-get info :with-title)) nil)
+	      ((string= "" title) nil)
+	      ((not (stringp command)) nil)
+	      ((string-match "\\(?:[^%]\\|^\\)%s" command)
+	       (format command title))
+	      (t command))))
      ;; Table of contents.
      (let ((depth (plist-get info :with-toc)))
        (when depth
@@ -1868,7 +1857,7 @@ CONTENTS is nil.  INFO is a plist holding contextual information."
 CONTENTS is nil.  INFO is a plist holding contextual information."
   (org-latex--wrap-label
    fixed-width
-   (format "\\begin{verbatim}\n%s\\end{verbatim}"
+   (format "\\begin{verbatim}\n%s\n\\end{verbatim}"
 	   (org-remove-indentation
 	    (org-element-property :value fixed-width)))
    info))
@@ -1894,9 +1883,12 @@ CONTENTS is nil.  INFO is a plist holding contextual information."
 		(org-export-get-footnote-definition footnote-reference info)
 		info t)))
       ;; Use \footnotemark if reference is within another footnote
-      ;; reference, footnote definition or table cell.
-      ((org-element-lineage footnote-reference
-			    '(footnote-reference footnote-definition table-cell))
+      ;; reference, footnote definition, table cell or item's tag.
+      ((or (org-element-lineage footnote-reference
+				'(footnote-reference footnote-definition
+						     table-cell))
+	   (eq 'item (org-element-type
+		      (org-export-get-parent-element footnote-reference))))
        "\\footnotemark")
       ;; Otherwise, define it with \footnote command.
       (t
@@ -1907,11 +1899,11 @@ CONTENTS is nil.  INFO is a plist holding contextual information."
 		  ;; reference to def.
 		  (cond ((not label) "")
 			((org-element-map (plist-get info :parse-tree) 'footnote-reference
-			    (lambda (f)
-			      (and (not (eq f footnote-reference))
-				   (equal (org-element-property :label f) label)
-				   (org-trim (org-latex--label def info t t))))
-			    info t))
+			   (lambda (f)
+			     (and (not (eq f footnote-reference))
+				  (equal (org-element-property :label f) label)
+				  (org-trim (org-latex--label def info t t))))
+			   info t))
 			(t "")))
 	  ;; Retrieve all footnote references within the footnote and
 	  ;; add their definition after it, since LaTeX doesn't support
@@ -2148,8 +2140,9 @@ See `org-latex-format-inlinetask-function' for details."
 		 (when priority (format "\\framebox{\\#%c} " priority))
 		 title
 		 (when tags
-		   (format "\\hfill{}\\textsc{:%s:}"
-			   (mapconcat #'org-latex--protect-text tags ":"))))))
+		   (format "\\hfill{}\\textsc{%s}"
+			   (org-make-tag-string
+			    (mapcar #'org-latex--protect-text tags)))))))
     (concat "\\begin{center}\n"
 	    "\\fbox{\n"
 	    "\\begin{minipage}[c]{.6\\textwidth}\n"
@@ -2200,12 +2193,22 @@ contextual information."
 		     (off "$\\square$")
 		     (trans "$\\boxminus$")))
 	 (tag (let ((tag (org-element-property :tag item)))
-		(and tag (org-export-data tag info)))))
+		(and tag (org-export-data tag info))))
+	 ;; If there are footnotes references in tag, be sure to add
+	 ;; their definition at the end of the item.  This workaround
+	 ;; is necessary since "\footnote{}" command is not supported
+	 ;; in tags.
+	 (tag-footnotes
+	  (or (and tag (org-latex--delayed-footnotes-definitions
+			(org-element-property :tag item) info))
+	      "")))
     (concat counter
 	    "\\item"
 	    (cond
-	     ((and checkbox tag) (format "[{%s %s}] " checkbox tag))
-	     ((or checkbox tag) (format "[{%s}] " (or checkbox tag)))
+	     ((and checkbox tag)
+	      (format "[{%s %s}] %s" checkbox tag tag-footnotes))
+	     ((or checkbox tag)
+	      (format "[{%s}] %s" (or checkbox tag) tag-footnotes))
 	     ;; Without a tag or a check-box, if CONTENTS starts with
 	     ;; an opening square bracket, add "\relax" to "\item",
 	     ;; unless the brackets comes from an initial export
@@ -2220,14 +2223,7 @@ contextual information."
 					  'latex)))))))
 	      "\\relax ")
 	     (t " "))
-	    (and contents (org-trim contents))
-	    ;; If there are footnotes references in tag, be sure to
-	    ;; add their definition at the end of the item.  This
-	    ;; workaround is necessary since "\footnote{}" command is
-	    ;; not supported in tags.
-	    (and tag
-		 (org-latex--delayed-footnotes-definitions
-		  (org-element-property :tag item) info)))))
+	    (and contents (org-trim contents)))))
 
 
 ;;;; Keyword
@@ -2513,8 +2509,10 @@ INFO is a plist holding contextual information.  See
 	 (path (org-latex--protect-text
 		(cond ((member type '("http" "https" "ftp" "mailto" "doi"))
 		       (concat type ":" raw-path))
-		      ((string= type "file") (org-export-file-uri raw-path))
-		      (t raw-path)))))
+		      ((string= type "file")
+		       (org-export-file-uri raw-path))
+		      (t
+		       raw-path)))))
     (cond
      ;; Link type is handled by a special function.
      ((org-export-custom-protocol-maybe link desc 'latex))
@@ -2781,24 +2779,21 @@ channel."
 DATA is a parse tree or a secondary string.  INFO is a plist
 containing export options.  Modify DATA by side-effect and return it."
   (let ((valid-object-p
-	 ;; Non-nil when OBJ can be added to the latex math block B.
-	 (lambda (obj b)
-	   (pcase (org-element-type obj)
-	     (`entity (org-element-property :latex-math-p obj))
+	 ;; Non-nil when OBJECT can be added to a latex math block.
+	 (lambda (object)
+	   (pcase (org-element-type object)
+	     (`entity (org-element-property :latex-math-p object))
 	     (`latex-fragment
-	      (let ((value (org-element-property :value obj)))
+	      (let ((value (org-element-property :value object)))
 		(or (string-prefix-p "\\(" value)
-		    (string-match-p "\\`\\$[^$]" value))))
-	     ((and type (or `subscript `superscript))
-	      (not (memq type (mapcar #'org-element-type
-				      (org-element-contents b)))))))))
-    (org-element-map data '(entity latex-fragment subscript superscript)
+		    (string-match-p "\\`\\$[^$]" value))))))))
+    (org-element-map data '(entity latex-fragment)
       (lambda (object)
 	;; Skip objects already wrapped.
 	(when (and (not (eq (org-element-type
 			     (org-element-property :parent object))
 			    'latex-math-block))
-		   (funcall valid-object-p object nil))
+		   (funcall valid-object-p object))
 	  (let ((math-block (list 'latex-math-block nil))
 		(next-elements (org-export-get-next-element object info t))
 		(last object))
@@ -2810,20 +2805,17 @@ containing export options.  Modify DATA by side-effect and return it."
 	      ;; MATH-BLOCK swallows consecutive math objects.
 	      (catch 'exit
 		(dolist (next next-elements)
-		  (unless (funcall valid-object-p next math-block)
-		    (throw 'exit nil))
+		  (unless (funcall valid-object-p next) (throw 'exit nil))
 		  (org-element-extract-element next)
 		  (org-element-adopt-elements math-block next)
 		  ;; Eschew the case: \beta$x$ -> \(\betax\).
-		  (unless (memq (org-element-type next)
-				'(subscript superscript))
-		    (org-element-put-property last :post-blank 1))
+		  (org-element-put-property last :post-blank 1)
 		  (setq last next)
 		  (when (> (or (org-element-property :post-blank next) 0) 0)
 		    (throw 'exit nil)))))
 	    (org-element-put-property
 	     math-block :post-blank (org-element-property :post-blank last)))))
-      info nil '(subscript superscript latex-math-block) t)
+      info nil '(latex-math-block) t)
     ;; Return updated DATA.
     data))
 
@@ -2900,7 +2892,7 @@ contextual information."
 	   (listings (plist-get info :latex-listings)))
       (cond
        ;; Case 1.  No source fontification.
-       ((not listings)
+       ((or (not lang) (not listings))
 	(let* ((caption-str (org-latex--caption/label-string src-block info))
 	       (float-env
 		(cond ((string= "multicolumn" float)
@@ -3078,56 +3070,18 @@ holding contextual information."
 
 ;;;; Subscript
 
-(defun org-latex--script-size (object info)
-  "Transcode a subscript or superscript object.
-OBJECT is an Org object.  INFO is a plist used as a communication
-channel."
-  (let ((output ""))
-    (org-element-map (org-element-contents object)
-	(cons 'plain-text org-element-all-objects)
-      (lambda (obj)
-	(cl-case (org-element-type obj)
-	  ((entity latex-fragment)
-	   (let ((data (org-trim (org-export-data obj info))))
-	     (string-match
-	      "\\`\\(?:\\\\[([]\\|\\$+\\)?\\(.*?\\)\\(?:\\\\[])]\\|\\$+\\)?\\'"
-	      data)
-	     (setq output
-		   (concat output
-			   (match-string 1 data)
-			   (let ((blank (org-element-property :post-blank obj)))
-			     (and blank (> blank 0) "\\ "))))))
-	  (plain-text
-	   (setq output
-		 (format "%s\\text{%s}" output (org-export-data obj info))))
-	  (otherwise
-	   (setq output
-		 (concat output
-			 (org-export-data obj info)
-			 (let ((blank (org-element-property :post-blank obj)))
-			   (and blank (> blank 0) "\\ ")))))))
-      info nil org-element-recursive-objects)
-    ;; Result.  Do not wrap into curly brackets if OUTPUT is a single
-    ;; character.
-    (concat (if (eq (org-element-type object) 'subscript) "_" "^")
-	    (and (> (length output) 1) "{")
-	    output
-	    (and (> (length output) 1) "}"))))
-
-(defun org-latex-subscript (subscript _contents info)
+(defun org-latex-subscript (_subscript contents _info)
   "Transcode a SUBSCRIPT object from Org to LaTeX.
-CONTENTS is the contents of the object.  INFO is a plist holding
-contextual information."
-  (org-latex--script-size subscript info))
+CONTENTS is the contents of the object."
+  (format "\\textsubscript{%s}" contents))
 
 
 ;;;; Superscript
 
-(defun org-latex-superscript (superscript _contents info)
+(defun org-latex-superscript (_superscript contents _info)
   "Transcode a SUPERSCRIPT object from Org to LaTeX.
-CONTENTS is the contents of the object.  INFO is a plist holding
-contextual information."
-  (org-latex--script-size superscript info))
+CONTENTS is the contents of the object."
+  (format "\\textsuperscript{%s}" contents))
 
 
 ;;;; Table
