@@ -146,7 +146,7 @@
     (:latex-tables-booktabs nil nil org-latex-tables-booktabs)
     (:latex-tables-centered nil nil org-latex-tables-centered)
     (:latex-text-markup-alist nil nil org-latex-text-markup-alist)
-    (:latex-author-command "AUTHOR" nil org-latex-author-command)
+    ;; (:latex-author-command "AUTHOR" nil org-latex-author-command)
     (:latex-title-command "TITLE" nil org-latex-title-command)
     (:latex-toc-command nil nil org-latex-toc-command)
     (:latex-compiler "LATEX_COMPILER" nil org-latex-compiler)
